@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./signUp.css"
+import "./signUp.css";
+import { API } from "../config/development";
+import axios from "axios";
 
 function Signup() {
   const [firstName, setFirstName] = useState("");
@@ -20,7 +22,7 @@ function Signup() {
   const [passwordMatchErr, setPasswordMatchErr] = useState(false);
   const navigate = useNavigate();
 
-  function resetForm() {
+  const resetForm = () => {
     setFirstName("");
     setLastName("");
     setEmail("");
@@ -36,8 +38,7 @@ function Signup() {
     setConfirmPassword("");
     setPasswordMatchErr(false);
   }
-
-  function showPassword() {
+  const showPassword = () => {
     if (inputPassword === "password") {
       setInputPassword("text");
     } else {
@@ -45,12 +46,12 @@ function Signup() {
     }
   }
 
-  function validateEmail(email) {
+  const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault()
     if (firstName === "") {
       setFirstNameErr(true);
@@ -106,8 +107,20 @@ function Signup() {
       confirmPassword !== "" &&
       password === confirmPassword
     ) {
-      navigate("/login");
-      // window.location.href = "/"; we can use this method as well but we dont to reload page in react
+      const signUpData = { username: firstName, email: email, password: password, Number: mobileNumber, age: age }
+
+      const signUp = async () => {
+        try {
+          const res = await axios.post(API.SIGNUP, signUpData);
+          if (res.data.message === "Signed Up Successfully") {
+            navigate("/login");
+          }
+        }
+        catch (error) {
+          console.error(error)
+        }
+      }
+      signUp();
     }
   }
 
