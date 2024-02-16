@@ -9,12 +9,12 @@ function Login() {
   const [passwordErr, setPasswordErr] = useState(false);
   const navigate = useNavigate();
 
-  function validateEmail(email) {
+  const validateEmail = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
-  function handleSubmit(event) {
+  const handleSubmit = (event) => {
     event.preventDefault()
     if (emailid === "") {
       setEmailidErr(true);
